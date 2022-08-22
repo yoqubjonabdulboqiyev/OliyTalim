@@ -1,7 +1,7 @@
 import {modelOptions, index, prop, Ref, getModelForClass} from  "@typegoose/typegoose"
 import { Types } from "mongoose";
 import { Collections } from "../../../../constant/collections";
-import { BaseModel } from "../base.model";
+import { BaseModel } from "../../base.model";
 import { Role } from "../role/role.model";
 
 

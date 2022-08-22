@@ -1,8 +1,11 @@
 import { getModelForClass, modelOptions, prop, Ref } from "@typegoose/typegoose";
 import { Types } from "mongoose";
 import { Collections } from "../../../constant/collections";
-import { BaseModel } from "../admin/base.model";
-import { Mavzu } from "../mavzu/mavzu.model";
+import { BaseModel } from "../base.model";
+import { Class } from "../class/class.model";
+import { Topic } from "../class/subject/topic/topic.model";
+import { Theme } from "../class/subject/topic/theme/theme.model";
+import { Subject } from "../class/subject/subject.model";
 
 @modelOptions({
     schemaOptions: {
@@ -20,9 +23,30 @@ export class Test extends BaseModel{
     @prop({
         required:true,
         type: Types.ObjectId,
-        ref:Collections.MAVZU
+        ref:Collections.THEME
     })
-    mavzuId : Ref<Mavzu>
+    themeId : Ref<Theme>
+
+    @prop({
+        required:true,
+        type: Types.ObjectId,
+        ref:Collections.TOPIC
+    })
+    topicId : Ref<Topic>
+
+    @prop({
+        required:true,
+        type: Types.ObjectId,
+        ref:Collections.SUBJECT
+    })
+    subjectId : Ref<Subject>
+
+    @prop({
+        required:true,
+        type: Types.ObjectId,
+        ref:Collections.CLASS
+    })
+    classId : Ref<Class>
 
     @prop({required:true})
     testCount : number 
@@ -30,7 +54,7 @@ export class Test extends BaseModel{
     @prop({
         required:true
     })
-    vaqt: number;
+    duration: number;
 }
 
 export const testModel = getModelForClass(Test)

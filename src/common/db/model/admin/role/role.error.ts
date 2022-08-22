@@ -1,5 +1,5 @@
 import { ErrorCode } from "../../../../constant/errorCode";
-import { BaseError } from "../../../../reporter/baseError";
+import { BaseError } from "../../../../reporter/base.error";
 
 export class RoleError extends BaseError {
     static NotFound(data: any = null) {

@@ -1,7 +1,7 @@
 import { userError } from "../../../common/db/model/user/eror";
 import { userService } from "../../../common/service/user/user.service";
 import { jwt } from "../../../common/utils/jwt";
-import { UserDto } from "../../../common/validation/dto/user/userDto";
+import { UserDto } from "../../../common/validation/dto/user/user.dto";
 import { DtoGroups } from "../../../common/validation/dtoGroups";
 import { validateIt } from "../../../common/validation/validate";
 
@@ -32,7 +32,7 @@ export async function getUserByIdHandler(req, res, next) {
     try {
 
         const data = await validateIt((req._id).toString(), UserDto, DtoGroups.GET_BY_ID)
-        const user = await userService.findByIds(data);
+        const user = await userService.UserFindById(data);
         return res.send(userError.Success(user))
     } catch (e) {
         return next(e);

@@ -1,6 +1,6 @@
 import { Role } from "../../../common/constant/role";
 import { RoleError } from "../../../common/db/model/admin/role/role.error";
-import { roleService } from "../../../common/service/admin/role/role.servise";
+import { roleService } from "../../../common/service/admin/role/role.service";
 import { RoleDto } from "../../../common/validation/dto/admin/role/role.dto";
 import { PagingDto } from "../../../common/validation/dto/pagingDto";
 import { DtoGroups } from "../../../common/validation/dtoGroups";
@@ -30,9 +30,7 @@ export async function getPagingRoleHandler(req, res, next) {
 export async function createRoleHandler(req: any, res: any, next: Function) {
     try {
         // await roleService.hasAccess(req.roleId, Role.ROLE)
-        console.log(req.body)
         const data = await validateIt(req.body, RoleDto, DtoGroups.CREATE);
-        console.log("data : ", data)
         const role = await roleService.create(data);
 
         return res.send(RoleError.Success(role._id))
@@ -45,8 +43,6 @@ export async function updateRoleHandler(req, res, next) {
     try {
         await roleService.hasAccess(req.roleId, Role.ROLE)
         const data = await validateIt(req.body, RoleDto, DtoGroups.UPDATE)
-        console.log(req.roleId.toString())
-        console.log(data._id)
         if (req.roleId.toString() != data._id) throw RoleError.NotEnoughPermission()
         const changeRole = await roleService.update(data._id, data)
 

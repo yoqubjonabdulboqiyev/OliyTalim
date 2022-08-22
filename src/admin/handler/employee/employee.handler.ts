@@ -1,7 +1,7 @@
-import { EmployeeError } from "../../../common/db/model/admin/employee/error";
+import { EmployeeError } from "../../../common/db/model/admin/employee/employee.error";
 import { Role } from "../../../common/constant/role";
-import { employeeService } from "../../../common/service/admin/employeeService/employee";
-import { roleService } from "../../../common/service/admin/role/role.servise";
+import { employeeService } from "../../../common/service/admin/employee/employee.service";
+import { roleService } from "../../../common/service/admin/role/role.service";
 import { PagingDto } from "../../../common/validation/dto/pagingDto";
 import { BaseDto, DtoGroups } from "../../../common/validation/dtoGroups";
 import { validateIt } from "../../../common/validation/validate";

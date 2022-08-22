@@ -251,7 +251,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    sinf: boolean;
+    class: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -259,7 +259,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    sinfCreate: boolean;
+    classCreate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -267,7 +267,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    sinfUpdate: boolean;
+    classUpdate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -275,7 +275,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    sinfDelete: boolean;
+    classDelete: boolean;
 
      //bob
      @IsBoolean({
@@ -284,7 +284,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    bob: boolean;
+    topic: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -292,7 +292,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    bobCreate: boolean;
+    topicCreate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -300,7 +300,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    bobUpdate: boolean;
+    topicUpdate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -308,7 +308,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    bobDelete: boolean;
+    topicDelete: boolean;
 
     //savol
     @IsBoolean({
@@ -317,7 +317,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    savol: boolean;
+    question: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -325,7 +325,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    savolCreate: boolean;
+    questionCreate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -333,7 +333,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    savolUpdate: boolean;
+    questionUpdate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -341,7 +341,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    savolDelete: boolean;
+    questionDelete: boolean;
 
     //mavzu
     @IsBoolean({
@@ -350,7 +350,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    mavzu: boolean;
+    theme: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -358,7 +358,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    mavzuCreate: boolean;
+    themeCreate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -366,7 +366,7 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    mavzuUpdate: boolean;
+    themeUpdate: boolean;
   
     @IsBoolean({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
@@ -374,6 +374,6 @@ export class RoleDto extends BaseDto{
     @IsOptional({
       groups: [DtoGroups.CREATE, DtoGroups.UPDATE]
     })
-    mavzuDelete: boolean;
+    themeDelete: boolean;
   
   }

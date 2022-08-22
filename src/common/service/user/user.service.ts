@@ -3,7 +3,7 @@ import { QueryOptions, Types } from "mongoose";
 import { userError } from "../../db/model/user/eror";
 import { User, UserModel } from "../../db/model/user/user.model";
 import { PagingDto } from "../../validation/dto/pagingDto";
-import { UserDto } from "../../validation/dto/user/userDto";
+import { UserDto } from "../../validation/dto/user/user.dto";
 import { BaseServise } from "../BaseService";
 
 
@@ -12,7 +12,7 @@ export class UserServise extends BaseServise<User>{
         super(model)
     }
 
-    public async findByIds(id) {
+    public async UserFindById(id) {
         try {
             const user = await this.findById(id);
             if (!user) throw userError.NotFound(id);
@@ -25,46 +25,45 @@ export class UserServise extends BaseServise<User>{
 
     public async findPhoneNumber(phoneNumber) {
         try {
-            const user = await this.model.findOne({phoneNumber:phoneNumber});
+            const user = await this.model.findOne({ phoneNumber: phoneNumber });
             if (!user) throw userError.NotFound(phoneNumber);
             return user;
         }
         catch (e) {
-            throw e;
+            return e;
         }
     }
 
     public async createUser(data) {
         try {
-            const users = await this.model.findOne({phoneNumber:data.phoneNumber});
-            if(users){throw userError.AlreadyExsist(data)}
+            const users = await this.model.findOne({ phoneNumber: data.phoneNumber });
+            if (users) { throw userError.AlreadyExsist(data) }
             const password = Number(Math.random().toString().substring(2, 6));
             data.password = password;
             const user = await super.create(data);
             return user;
         } catch (e) {
-            throw e;
+            return e;
         }
     }
     public async updateUser(id, data: UserDto, options?: QueryOptions) {
         try {
-            const user = await this.findById(id);
-            if (!user) throw userError.NotFound(id);
-            const updatesubject = await this.updateOne(id, data, options);
-            return updatesubject
+            await this.UserFindById(id)
+            const updateUser = await this.updateOne(id, data, options);
+            return updateUser
         } catch (e) {
-            throw e;
+            if(e.code==11000) throw userError.AlreadyExsist(Object.keys(e.keyPattern))
+            return e;
         }
     }
 
     public async deleteUser(id) {
         try {
-            const user = await this.findById(id)
-            if (!user) throw userError.NotFound(id);
-            const deletesubject = await this.deleteOne(id)
-            return deletesubject
+            await this.UserFindById(id)
+            const deleteUser = await this.deleteOne(id)
+            return deleteUser
         } catch (e) {
-            throw e;
+            return e;
         }
     }
 

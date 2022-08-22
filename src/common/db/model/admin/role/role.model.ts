@@ -1,6 +1,6 @@
 import { getModelForClass, index, modelOptions, prop } from "@typegoose/typegoose";
 import { Collections } from "../../../../constant/collections";
-import { BaseModel } from "../base.model";
+import { BaseModel } from "../../base.model";
 
 
 
@@ -42,9 +42,6 @@ export class Role extends BaseModel {
     })
     name: string;
 
-
-    //fanlar
-
     @prop({
         default: true
     })
@@ -64,8 +61,6 @@ export class Role extends BaseModel {
         default: true
     })
     subjectDelete: boolean;
-
-    //yangilik
 
     @prop({
         default: true
@@ -87,7 +82,6 @@ export class Role extends BaseModel {
     })
     newsDelete: boolean;
     
-    // test
     @prop({
         default: true
     })
@@ -108,7 +102,6 @@ export class Role extends BaseModel {
     })
     testDelete: boolean;
 
-    //teacher
     @prop({
         default: true
     })
@@ -129,12 +122,10 @@ export class Role extends BaseModel {
     })
     teacherDelete: boolean;
 
-    //student
     @prop({
         default: true
     })
     student: boolean;
-
 
     @prop({
         default: true
@@ -146,7 +137,6 @@ export class Role extends BaseModel {
     })
     studentDelete: boolean;
 
-    //role
     @prop({
         default: true
     })
@@ -167,7 +157,6 @@ export class Role extends BaseModel {
     })
     roleDelete: boolean;
 
-    //employee
     @prop({
         default: true
     })
@@ -188,89 +177,85 @@ export class Role extends BaseModel {
     })
     employeeDelete: boolean;
 
-    //sinf
     @prop({
         default: true
     })
-    sinf: boolean;
+    class: boolean;
 
     @prop({
         default: true
     })
-    sinfCreate: boolean;
+    classCreate: boolean;
 
     @prop({
         default: true
     })
-    sinfUpdate: boolean;
+    classUpdate: boolean;
 
     @prop({
         default: true
     })
-    sinfDelete: boolean;
+    classDelete: boolean;
     
-    //bob
     @prop({
         default: true
     })
-    bob: boolean;
+    topic: boolean;
 
     @prop({
         default: true
     })
-    bobCreate: boolean;
+    topicCreate: boolean;
 
     @prop({
         default: true
     })
-    bobUpdate: boolean;
+    topicUpdate: boolean;
 
     @prop({
         default: true
     })
-    bobDelete: boolean;
-
-    //mavzu
-    @prop({
-        default: true
-    })
-    mavzu: boolean;
+    topicDelete: boolean;
 
     @prop({
         default: true
     })
-    mavzuCreate: boolean;
+    theme: boolean;
 
     @prop({
         default: true
     })
-    mavzuUpdate: boolean;
+    themeCreate: boolean;
 
     @prop({
         default: true
     })
-    mavzuDelete: boolean;
-
-    //savol
-    @prop({
-        default: true
-    })
-    savol: boolean;
+    themeUpdate: boolean;
 
     @prop({
         default: true
     })
-    savolCreate: boolean;
+    themeDelete: boolean;
 
     @prop({
         default: true
     })
-    savolUpdate: boolean;
+    question: boolean;
 
     @prop({
         default: true
     })
-    savolDelete: boolean;
+    questionCreate: boolean;
+
+    @prop({
+        default: true
+    })
+    questionUpdate: boolean;
+
+    @prop({
+        default: true
+    })
+    questionDelete: boolean;
 
 }
 

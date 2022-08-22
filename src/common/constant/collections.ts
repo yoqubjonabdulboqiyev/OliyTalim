@@ -4,15 +4,15 @@
 export  enum Collections {
     EMPLOYEE = "employee",
     ROLE = "role",
-    SINF = 'sinf',
+    CLASS = 'class',
     SUBJECT = 'subject',
     CATEGORY = 'category',
     NEWS = 'news',
-    BOB = "bob",
-    SAVOL = "savols",
-    MAVZU = "manvzu",
+    TOPIC = "topic",
+    QUESTION = "questions",
+    THEME = "theme",
     TEST ="test",
     USER = 'user',
-    YECHISH = "yechish",
-    NATIJA = 'natija'
+    SOLVETEST = "solveTest",
+    RESULT = 'result'
 }

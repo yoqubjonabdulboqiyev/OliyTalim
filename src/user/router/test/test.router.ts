@@ -4,7 +4,7 @@
 import { Router } from "express";
 import { getTestPagingHandler } from "../../handler/test/test.handler";
 
-import { createYechishHandler, FinishTestHandler, StartTestHandler } from "../../handler/test/yechish/yechish.handler";
+import { createYechishHandler, FinishTestHandler, StartTestHandler } from "../../handler/test/solveTest/solveTest.handler";
 import { auth } from "../../midlleware/authtoken";
 
 

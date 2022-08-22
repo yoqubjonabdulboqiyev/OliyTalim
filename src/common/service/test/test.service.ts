@@ -1,10 +1,11 @@
 import { ModelType } from "@typegoose/typegoose/lib/types";
+import { lookup } from "dns";
 import { QueryOptions, Types } from "mongoose";
 import { Collections } from "../../constant/collections";
-import { testError } from "../../db/model/test/eror";
+import { TestError } from "../../db/model/test/test.eror";
 import { Test, testModel } from "../../db/model/test/test.model";
 import { PagingDto } from "../../validation/dto/pagingDto";
-import { testDto } from "../../validation/dto/test/testDto";
+import { testDto } from "../../validation/dto/test/test.dto";
 import { BaseServise } from "../BaseService";
 
 
@@ -13,10 +14,10 @@ export class TestServise extends BaseServise<Test>{
         super(model)
     }
 
-    public async findByIds(id) {
+    public async TestfindById(id) {
         try {
             const test = await this.findById(id);
-            if (!test) throw testError.NotFound(id);
+            if (!test) throw TestError.NotFound(id);
             return test;
         }
         catch (e) {
@@ -29,113 +30,56 @@ export class TestServise extends BaseServise<Test>{
             const test = await super.create(data);
             return test;
         } catch (e) {
-            throw e;
+            return e;
         }
     }
     public async updateTest(id, data: testDto, options?: QueryOptions) {
         try {
-            const test = await this.findById(id);
-            if (!test) throw testError.NotFound(id);
+            await this.TestfindById(id)
             const updatetest = await this.updateOne(id, data, options);
             return updatetest
         } catch (e) {
-            throw e;
+            return e;
         }
     }
 
     public async deleteTest(id) {
         try {
-            const test = await this.findById(id)
-            if (!test) throw testError.NotFound(id);
+            await this.TestfindById(id)
             const deletetest = await this.deleteOne(id)
             return deletetest
         } catch (e) {
-            throw e;
+            return e;
         }
     }
 
     public async getPaging<T>(dto: PagingDto) {
         try {
             let query: any = { isDeleted: false };
-                const $lookupmavzu = {
-                    $lookup: {
-                        from: Collections.MAVZU,
-                        localField: 'mavzuId',
-                        foreignField: '_id',
-                        as: 'mavzu'
-                    }
+            const $lookup = {
+                $lookup: {
+                    from: Collections.QUESTION,
+                    localField: '_id',
+                    foreignField: 'testId',
+                    as: 'question'
                 }
-    
-                const $lookupBob = {
-                    $lookup: {
-                        from: Collections.BOB,
-                        localField: 'mavzu.bobId',
-                        foreignField: '_id',
-                        as: 'bob'
-                    }
+            }
+            const $unwind = {
+                $unwind : {
+                    path : "$question"
                 }
-                const $lookupsubject = {
-                    $lookup: {
-                        from: Collections.SUBJECT,
-                        localField: 'bob.subjectId',
-                        foreignField: '_id',
-                        as: 'subject'
-                    }
-                }
-    
-                const $lookupsinf = {
-                    $lookup: {
-                        from: Collections.SINF,
-                        localField: 'subject.sinfId',
-                        foreignField: '_id',
-                        as: 'sinf'
-                    }
-                }
-    
-                const $lookupSavol = {
-                    $lookup: {
-                        from: Collections.SAVOL,
-                        localField: '_id',
-                        foreignField: 'testId',
-                        as: 'savol'
-                    }
-                }
-    
-                const $project = {
-                    $project: {
-                        name: 1,
-                        vaqt : 1,
-                        mavzu : {
-                            name : 1,
-                        },
-                        bob : {
-                            name  : 1,
-                        },
-                        subject : {
-                            name : 1,
-                        },
-                        sinf : {
-                            name : 1,
-                        },
-                        savol : {
-                            title : 1,
-                            javob : {
-                                title:1
-                            },
-                        }
-                    }
-                }
-    
-                const $pipline = [ $lookupmavzu, $lookupBob, $lookupsubject, $lookupsinf, $lookupSavol, $project];
-    
+            }
+
+            const $pipline = [$lookup, $unwind];
+
 
             return await this.findPaging(query, dto, $pipline);
-        } catch (error) {
-            throw (error);
+        } catch (e) {
+            return e;
         }
     }
 
-public async getById<T>(id: string) {
+    public async getById<T>(id: string) {
         try {
             const $match = {
                 $match: {
@@ -144,80 +88,20 @@ public async getById<T>(id: string) {
                 }
             }
 
-            const $lookupmavzu = {
+            const $lookup = {
                 $lookup: {
-                    from: Collections.MAVZU,
-                    localField: 'mavzuId',
-                    foreignField: '_id',
-                    as: 'mavzu'
-                }
-            }
-
-            const $lookupBob = {
-                $lookup: {
-                    from: Collections.BOB,
-                    localField: 'mavzu.bobId',
-                    foreignField: '_id',
-                    as: 'bob'
-                }
-            }
-            const $lookupsubject = {
-                $lookup: {
-                    from: Collections.SUBJECT,
-                    localField: 'bob.subjectId',
-                    foreignField: '_id',
-                    as: 'subject'
-                }
-            }
-
-            const $lookupsinf = {
-                $lookup: {
-                    from: Collections.SINF,
-                    localField: 'subject.sinfId',
-                    foreignField: '_id',
-                    as: 'sinf'
-                }
-            }
-
-            const $lookupSavol = {
-                $lookup: {
-                    from: Collections.SAVOL,
+                    from: Collections.QUESTION,
                     localField: '_id',
                     foreignField: 'testId',
-                    as: 'savol'
+                    as: 'question'
                 }
             }
 
-            const $project = {
-                $project: {
-                    name: 1,
-                    vaqt : 1,
-                    mavzu : {
-                        name : 1,
-                    },
-                    bob : {
-                        name  : 1,
-                    },
-                    subject : {
-                        name : 1,
-                    },
-                    sinf : {
-                        name : 1,
-                    },
-                    savol : {
-                        title : 1,
-                        javob : {
-                            title:1
-                        },
-                    }
-                }
-            }
-
-            const $pipline = [$match, $lookupmavzu, $lookupBob, $lookupsubject, $lookupsinf, $lookupSavol, $project];
+            const $pipline = [$match, $lookup];
 
             return await this.aggregate($pipline);
-        } catch (error) {
-            throw (error);
+        } catch (e) {
+            return e;
         }
     }
 

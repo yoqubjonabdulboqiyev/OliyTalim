@@ -1,6 +1,6 @@
 import { ClassConstructor, plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { BaseError } from '../reporter/baseError';
+import { BaseError } from '../reporter/base.error';
 
 export const validateIt = async <T>(data, classType: ClassConstructor<T>, groups: any): Promise<T> => {
   if (!data) {

@@ -1,5 +1,5 @@
-import { EmployeeError } from "../../common/db/model/admin/employee/error";
-import { employeeService } from "../../common/service/admin/employeeService/employee";
+import { EmployeeError } from "../../common/db/model/admin/employee/employee.error";
+import { employeeService } from "../../common/service/admin/employee/employee.service";
 import { jwt } from "../../common/utils/jwt";
 
 

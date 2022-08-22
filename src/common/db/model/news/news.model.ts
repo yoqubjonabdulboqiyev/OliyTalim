@@ -1,6 +1,6 @@
 import { prop, modelOptions, index, getModelForClass } from "@typegoose/typegoose";
 import { Collections } from "../../../constant/collections";
-import { BaseModel } from "../admin/base.model";
+import { BaseModel } from "../base.model";
 
 export enum ContentType {
     TEXT = 'text',
@@ -19,10 +19,6 @@ export enum ListIndicator {
     NUMBER = 'number'
 }
 
-export enum TitleType{
-    OQITUVCHI ="o'qituvchi",
-    OQUVCHI = "o'quvchi"
-}
 
 export class ContentData{
     @prop({
@@ -129,9 +125,6 @@ export class News extends BaseModel{
 
     @prop({ required: true, trim: true })
     title: string
-
-    @prop({ required: true, trim: true })
-    titleType: TitleType
 
     @prop({
         required: true,

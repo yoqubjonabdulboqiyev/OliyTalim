@@ -1,6 +1,6 @@
 import { getModelForClass, index, modelOptions, prop } from "@typegoose/typegoose";
 import { Collections } from "../../../constant/collections";
-import { BaseModel } from "../admin/base.model";
+import { BaseModel } from "../base.model";
 
 export enum Gender{
     AYOL = 'ayol',

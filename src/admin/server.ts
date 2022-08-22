@@ -3,12 +3,12 @@ import { ADMIN_PORt, HOST } from "../common/config";
 import { connectDB } from "../common/db/connection";
 import employeeRoute from "../admin/route/employee/employee.route"
 import roleRoute from "../admin/route/role/role.route";
-import sinfRouter from '../admin/route/sinf/sinf.route';
-import subject from '../admin/route/subject/subject.route'
-import bobRouter from "../admin/route/bob/bob.router";
-import mavzuRouter from '../admin/route/mavzu/mavzu.route';
+import sinfRouter from './route/class/class.route';
+import subject from './route/class/subject/subject.route'
+import bobRouter from "./route/class/subject/topic/topic.router";
+import mavzuRouter from './route/class/subject/topic/theme/theme.route';
 import testRouter from '../admin/route/test/test.Router';
-import savolRouter from '../admin/route/test/savol/savol.router';
+import savolRouter from './route/test/question/question.router';
 import newsRouter from '../admin/route/newss/news.router'
 
 
@@ -17,12 +17,12 @@ import newsRouter from '../admin/route/newss/news.router'
 import userRouter from "../user/router/user/user.router";
 import testYechishRouter from "../user/router/test/test.router";
 import newsrouter from '../user/router/news/news.router';
-import subjectroter from '../user/router/subject/subject.router';
-import sinfrouter from '../user/router/sinf/sinf.router'
-import bobrouter from '../user/router/bob/bob.router'
-import mavzurouter from '../user/router/mavzu/mavzu'
+import subjectroter from '../user/router/class/subject/subject.router';
+import sinfrouter from '../user/router/class/class.router'
+import bobrouter from '../user/router/class/subject/topic/topic.router'
+import mavzurouter from '../user/router/class/subject/topic/theme/theme.route'
 import statisticRouter from '../user/router/statistic/statistic.router'
-import { BaseError } from "../common/reporter/baseError";
+import { BaseError } from "../common/reporter/base.error";
 
 
 const app = express();
