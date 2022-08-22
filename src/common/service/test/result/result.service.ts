@@ -14,140 +14,105 @@ export class ResultServise extends BaseServise<Result>{
         super(model)
     }
     public async findStart(id) {
-        try {
-            const $match = {
-                $match: {
-                    userId: new Types.ObjectId(id),
-                    status: 'start'
-                }
+        const $match = {
+            $match: {
+                userId: new Types.ObjectId(id),
+                status: 'start'
             }
-            const $pipeline = [$match]
-            const findStartTest = await this.aggregate($pipeline)
-            return findStartTest
         }
-        catch (e) {
-           return e;
-        }
+        const findStartTest =  (await this.aggregate([$match])).shift()
+        return findStartTest
     }
 
     public async findNotFinished(data) {
-        try {
-            const $match = {
-                $match: {
-                    userId: new Types.ObjectId(data.userId),
-                    testId: new Types.ObjectId(data.testId),
-                    status: 'start'
-                }
+        const $match = {
+            $match: {
+                userId: new Types.ObjectId(data.userId),
+                testId: new Types.ObjectId(data.testId),
+                status: 'start'
             }
-            const $pipeline = [$match]
-            const findStartTest = await this.aggregate($pipeline)
-            return findStartTest
         }
-        catch (e) {
-            return e;
-        }
+        const findStartTest =  (await this.aggregate([$match])).shift()
+        return findStartTest
     }
     public async Time(data) {
-        try {
-            const $match = {
-                $match: {
-                    _id: new Types.ObjectId(data.testId),
-                }
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(data.testId),
             }
-            const $pipline = [$match]
-            const Test = await testService.aggregate($pipline)
-            const finishDate = new Date((Test[0].duration) * 60 * 1000 + (data.createdAt).getTime())
-            return finishDate
+        }
+       
+        const Test = (await testService.aggregate([$match])).shift();
+        const finishDate = new Date((Test.duration) * 60 * 1000 + (data.createdAt).getTime())
+        return finishDate
 
-        }
-        catch (e) {
-            return e;
-        }
     }
 
     public async findFinish(data) {
-        try {
-            const $match = {
-                $match: {
-                    userId: new Types.ObjectId(data.userId),
-                    testId: new Types.ObjectId(data.testId),
-                    status: 'finish'
-                }
+        const $match = {
+            $match: {
+                userId: new Types.ObjectId(data.userId),
+                testId: new Types.ObjectId(data.testId),
+                status: 'finish'
             }
-            const $pipeline = [$match]
-            const finish = await this.aggregate($pipeline)
-            return finish
         }
-        catch (e) {
-            return e;
-        }
+        
+        const finish =( await this.aggregate([$match])).shift()
+        return finish
     }
     public async createResult(data) {
-        try {
-            const result = await super.create(data);
-            return result;
-        } catch (e) {
-            return e;
-        }
+        const result = await super.create(data);
+        return result;
     }
     public async updateResult(id, data) {
-        try {
-            const updateResult = await this.updateOne(id, data);
-            return updateResult
-        } catch (e) {
-            return e;
-        }
+        const updateResult = await this.updateOne(id, data);
+        return updateResult
     }
 
     public async results(id) {
-        try {
-            const $match = {
-                $match: {
-                    testId: new Types.ObjectId(id)
-                }
+        const $match = {
+            $match: {
+                testId: new Types.ObjectId(id)
             }
-            const $group = {
-                $group: {
-                    _id: "$userId"
-                }
+        }
+        const $group = {
+            $group: {
+                _id: "$userId"
             }
-            const $pipeline = [$match, $group]
-            const UserCount = await this.aggregate($pipeline);
-            const $matchTest = {
-                $match: {
-                    _id: new Types.ObjectId(id)
-                }
+        }
+        const $pipeline = [$match, $group]
+        const UserCount = await this.aggregate($pipeline);
+        const $matchTest = {
+            $match: {
+                _id: new Types.ObjectId(id)
             }
+        }
 
-            const $pipelineTest = [$matchTest]
-            const test = await testService.aggregate($pipelineTest)
-            const $groups = {
-                $group: {
-                    _id: '$testId',
-                    TotalBall: { $sum: "$ball" },
-                    count: { $sum: 1 }
-                }
+        const $pipelineTest = [$matchTest]
+        const test = (await testService.aggregate($pipelineTest)).shift()
+        const $groups = {
+            $group: {
+                _id: '$testId',
+                TotalBall: { $sum: "$ball" },
+                count: { $sum: 1 }
             }
-            const $pipelineBall = [$match, $groups]
-            const totalBall = await this.aggregate($pipelineBall);
-            const $sort = {
-                $sort: {
-                    ball: -1
-                }
-            }
-            const $pipelineMax = [$match, $sort]
-            const MaxBall = await this.aggregate($pipelineMax)
-            const statistic = {
-                Ishtirokchilar: UserCount.length,
-                SavollarSoni: test[0].testCount,
-                OrtachaNatija: (totalBall[0].TotalBall * 100) / (totalBall[0].count * test[0].testCount),
-                MaksimalNatija: (MaxBall[0].ball * 100) / test[0].testCount
-            }
-            return statistic
         }
-        catch (e) {
-            return e;
+        const $pipelineBall = [$match, $groups]
+        const totalBall = (await this.aggregate($pipelineBall)).shift();
+        const $sort = {
+            $sort: {
+                ball: -1
+            }
         }
+        const $pipelineMax = [$match, $sort]
+        const MaxBall = (await this.aggregate($pipelineMax)).shift()
+        const statistic = {
+            Ishtirokchilar: UserCount.length,
+            SavollarSoni: test.testCount,
+            OrtachaNatija: (totalBall.TotalBall * 100) / (totalBall.count * test.testCount),
+            MaksimalNatija: (MaxBall.ball * 100) / test.testCount
+        }
+        return statistic
     }
 }
 

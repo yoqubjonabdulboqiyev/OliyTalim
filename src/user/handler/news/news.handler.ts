@@ -21,9 +21,9 @@ export async function getByIdNewsHandler(req, res, next) {
     try {
         const data = await validateIt(req.params, newsDto, DtoGroups.GET_BY_ID);
         await newsService.NewsFindById(data._id);
-        const getnews = await newsService.getById(data._id);
-        getnews[0].viewCount += 1;
-        const update = await newsService.updateNews(getnews[0]._id, getnews[0])
+        const getnews =( await newsService.getById(data._id)).shift();
+        getnews.viewCount += 1;
+        const update = await newsService.updateNews(getnews._id, getnews)
         return res.send(newsError.Success(update))
 
     } catch (e) {

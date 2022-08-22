@@ -16,46 +16,34 @@ class RoleService extends BaseServise<Role>{
     }
 
     public async findByIdError(id) {
-        try {
-            const role = await this.model.findById(id);
-            if (!role) throw RoleError.NotFound(id);
-            return role;
-        } catch (e) {
-            return e;
-        }
+        const role = await this.model.findById(id);
+        if (!role) throw RoleError.NotFound(id);
+        return role;
     }
 
     public async hasAccess(id: string, access: string) {
-        try {
-            const role = await this.findById(id);
+        const role = await this.findById(id);
 
-            if (!role) throw RoleError.NotFound(id);
+        if (!role) throw RoleError.NotFound(id);
 
-            if (!role[access] || role.isDeleted) throw EmployeeError.NotEnoughPermission();
-        } catch (e) {
-            return e;
-        }
+        if (!role[access] || role.isDeleted) throw EmployeeError.NotEnoughPermission();
     }
 
     public async getPaging<T>(dto: PagingDto) {
-        try {
-            let query = {
-                isDeleted: false,
-            }
-
-            const $project = {
-                $project: {
-                    _id: 1,
-                    name: 1,
-                    description: 1
-                },
-            }
-            const $pipeline = [$project]
-
-            return await this.findPaging(query, dto, $pipeline)
-        } catch (e) {
-            return e;
+        let query = {
+            isDeleted: false,
         }
+
+        const $project = {
+            $project: {
+                _id: 1,
+                name: 1,
+                description: 1
+            },
+        }
+        const $pipeline = [$project]
+
+        return await this.findPaging(query, dto, $pipeline)
     }
 
     public async create(data: RoleDto) {
@@ -79,13 +67,9 @@ class RoleService extends BaseServise<Role>{
     }
 
     public async deleteRole(id) {
-        try {
-            await this.findByIdError(id)
-            const deleteRole = await this.updateOne(id, { isDeleted: true })
-            return deleteRole
-        } catch (e) {
-            return e;
-        }
+        await this.findByIdError(id)
+        const deleteRole = await this.updateOne(id, { isDeleted: true })
+        return deleteRole
     }
 }
 

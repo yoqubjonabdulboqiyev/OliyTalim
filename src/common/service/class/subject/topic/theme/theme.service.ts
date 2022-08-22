@@ -13,14 +13,9 @@ export class ThemeServise extends BaseServise<Theme>{
     }
 
     public async ThemeFindById(id) {
-        try {
-            const theme = await this.findById(id);
-            if (!theme) throw ThemeError.NotFound(id);
-            return theme;
-        }
-        catch (e) {
-            return e;
-        }
+        const theme = await this.findById(id);
+        if (!theme) throw ThemeError.NotFound(id);
+        return theme;
     }
 
     public async createTheme(data) {
@@ -44,53 +39,41 @@ export class ThemeServise extends BaseServise<Theme>{
     }
 
     public async deleteTheme(id) {
-        try {
-            await this.ThemeFindById(id)
-            const deleteTheme = await this.deleteOne(id)
-            return deleteTheme
-        } catch (e) {
-            return e;
-        }
+        await this.ThemeFindById(id)
+        const deleteTheme = await this.deleteOne(id)
+        return deleteTheme
     }
 
     public async getPaging<T>(dto: PagingDto) {
-        try {
-            let query: any = { isDeleted: false };
+        let query: any = { isDeleted: false };
 
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
 
-            const $pipline = [$projection];
+        const $pipline = [$projection];
 
-            return await this.findPaging(query, dto, $pipline);
-        } catch (e) {
-            return e;
-        }
+        return await this.findPaging(query, dto, $pipline);
     }
 
     public async getById<T>(id: string) {
-        try {
-            const $match = {
-                $match: {
-                    _id: new Types.ObjectId(id),
-                    isDeleted: false
-                }
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(id),
+                isDeleted: false
             }
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
-
-            const $pipline = [$match, $projection];
-
-            return await this.aggregate($pipline);
-        } catch (e) {
-            return e;
         }
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
+
+        const $pipline = [$match, $projection];
+
+        return (await this.aggregate($pipline)).shift();
     }
 
 

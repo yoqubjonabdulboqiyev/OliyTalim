@@ -1,6 +1,6 @@
 
 
-import {  ModelType } from "@typegoose/typegoose/lib/types";
+import { ModelType } from "@typegoose/typegoose/lib/types";
 import { QueryOptions, Types } from "mongoose";
 import { newsError } from "../../db/model/news/news.error";
 import { News, NewsModel } from "../../db/model/news/news.model";
@@ -15,14 +15,9 @@ export class NewsServise extends BaseServise<News>{
     }
 
     public async NewsFindById(id) {
-        try {
-            const news = await this.findById(id);
-            if (!news) throw newsError.NotFound(id);
-            return news;
-        }
-        catch (e) {
-            return e;
-        }
+        const news = await this.findById(id);
+        if (!news) throw newsError.NotFound(id);
+        return news;
     }
 
     public async createNews(data) {
@@ -30,7 +25,7 @@ export class NewsServise extends BaseServise<News>{
             const news = await super.create(data);
             return news;
         } catch (e) {
-            if(e.code==11000) throw newsError.AlreadyExsist(Object.keys(e.keyPattern))
+            if (e.code == 11000) throw newsError.AlreadyExsist(Object.keys(e.keyPattern))
             return e;
         }
     }
@@ -40,64 +35,52 @@ export class NewsServise extends BaseServise<News>{
             const updateNews = await this.updateOne(id, data, options);
             return updateNews
         } catch (e) {
-            if(e.code==11000) throw newsError.AlreadyExsist(Object.keys(e.keyPattern))
+            if (e.code == 11000) throw newsError.AlreadyExsist(Object.keys(e.keyPattern))
             return e;
         }
     }
 
     public async deleteNews(id) {
-        try {
-            await this.NewsFindById(id)
-            const deleteNews = await this.deleteOne(id)
-            return deleteNews
-        } catch (e) {
-            return e;
-        }
+        await this.NewsFindById(id)
+        const deleteNews = await this.deleteOne(id)
+        return deleteNews
     }
 
     public async getPaging<T>(dto: PagingDto) {
-        try {
-            let query: any = { isDeleted: false };
+        let query: any = { isDeleted: false };
 
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
-            const $sort = {
-                $sort : {
-                    createdAt : -1
-                }
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
+        const $sort = {
+            $sort: {
+                createdAt: -1
             }
-
-            const $pipline = [$sort, $projection];
-
-            return await this.findPaging(query, dto, $pipline);
-        } catch (error) {
-            throw (error);
         }
+
+        const $pipline = [$sort, $projection];
+
+        return await this.findPaging(query, dto, $pipline);
     }
 
     public async getById<T>(id: string) {
-        try {
-            const $match = {
-                $match: {
-                    _id: new Types.ObjectId(id),
-                    isDeleted: false
-                }
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(id),
+                isDeleted: false
             }
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
-
-            const $pipline = [$match, $projection];
-
-            return await this.aggregate($pipline);
-        } catch (error) {
-            throw (error);
         }
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
+
+        const $pipline = [$match, $projection];
+
+        return await (await this.aggregate($pipline)).shift();
     }
 
 

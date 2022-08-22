@@ -15,94 +15,69 @@ export class TestServise extends BaseServise<Test>{
     }
 
     public async TestfindById(id) {
-        try {
-            const test = await this.findById(id);
-            if (!test) throw TestError.NotFound(id);
-            return test;
-        }
-        catch (e) {
-            throw e;
-        }
+        const test = await this.findById(id);
+        if (!test) throw TestError.NotFound(id);
+        return test;
     }
 
     public async createTest(data) {
-        try {
-            const test = await super.create(data);
-            return test;
-        } catch (e) {
-            return e;
-        }
+        const test = await super.create(data);
+        return test;
     }
     public async updateTest(id, data: testDto, options?: QueryOptions) {
-        try {
-            await this.TestfindById(id)
-            const updatetest = await this.updateOne(id, data, options);
-            return updatetest
-        } catch (e) {
-            return e;
-        }
+        await this.TestfindById(id)
+        const updatetest = await this.updateOne(id, data, options);
+        return updatetest
     }
 
     public async deleteTest(id) {
-        try {
-            await this.TestfindById(id)
-            const deletetest = await this.deleteOne(id)
-            return deletetest
-        } catch (e) {
-            return e;
-        }
+        await this.TestfindById(id)
+        const deletetest = await this.deleteOne(id)
+        return deletetest
     }
 
     public async getPaging<T>(dto: PagingDto) {
-        try {
-            let query: any = { isDeleted: false };
-            const $lookup = {
-                $lookup: {
-                    from: Collections.QUESTION,
-                    localField: '_id',
-                    foreignField: 'testId',
-                    as: 'question'
-                }
+        let query: any = { isDeleted: false };
+        const $lookup = {
+            $lookup: {
+                from: Collections.QUESTION,
+                localField: '_id',
+                foreignField: 'testId',
+                as: 'question'
             }
-            const $unwind = {
-                $unwind : {
-                    path : "$question"
-                }
-            }
-
-            const $pipline = [$lookup, $unwind];
-
-
-            return await this.findPaging(query, dto, $pipline);
-        } catch (e) {
-            return e;
         }
+        const $unwind = {
+            $unwind: {
+                path: "$question"
+            }
+        }
+
+        const $pipline = [$lookup, $unwind];
+
+
+        return await this.findPaging(query, dto, $pipline);
     }
 
     public async getById<T>(id: string) {
-        try {
-            const $match = {
-                $match: {
-                    _id: new Types.ObjectId(id),
-                    isDeleted: false
-                }
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(id),
+                isDeleted: false
             }
-
-            const $lookup = {
-                $lookup: {
-                    from: Collections.QUESTION,
-                    localField: '_id',
-                    foreignField: 'testId',
-                    as: 'question'
-                }
-            }
-
-            const $pipline = [$match, $lookup];
-
-            return await this.aggregate($pipline);
-        } catch (e) {
-            return e;
         }
+
+        const $lookup = {
+            $lookup: {
+                from: Collections.QUESTION,
+                localField: '_id',
+                foreignField: 'testId',
+                as: 'question'
+            }
+        }
+
+        const $pipline = [$match, $lookup];
+
+        return  (await this.aggregate($pipline)).shift();
     }
 
 

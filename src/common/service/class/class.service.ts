@@ -14,14 +14,9 @@ export class ClassServise extends BaseServise<Class>{
     }
 
     public async ClassFindById(id) {
-        try {
-            const Class = await this.findById(id);
-            if (!Class) throw ClassError.NotFound(id);
-            return Class;
-        }
-        catch (e) {
-            return e;
-        }
+        const Class = await this.findById(id);
+        if (!Class) throw ClassError.NotFound(id);
+        return Class;
     }
 
     public async createClass(data) {
@@ -29,7 +24,7 @@ export class ClassServise extends BaseServise<Class>{
             const Class = await super.create(data);
             return Class;
         } catch (e) {
-            if(e.code==11000) throw ClassError.AlreadyExsist(Object.keys(e.keyPattern))
+            if (e.code == 11000) throw ClassError.AlreadyExsist(Object.keys(e.keyPattern))
             return e;
         }
     }
@@ -39,59 +34,47 @@ export class ClassServise extends BaseServise<Class>{
             const updateClass = await this.updateOne(id, data, options);
             return updateClass
         } catch (e) {
-            if(e.code==11000) throw ClassError.AlreadyExsist(Object.keys(e.keyPattern))
+            if (e.code == 11000) throw ClassError.AlreadyExsist(Object.keys(e.keyPattern))
             return e;
         }
     }
 
     public async deleteClass(id) {
-        try {
-            await this.ClassFindById(id)
-            const deleteClass = await this.updateOne(id, { isDeleted: true })
-            return deleteClass
-        } catch (e) {
-            return e;
-        }
+        await this.ClassFindById(id)
+        const deleteClass = await this.updateOne(id, { isDeleted: true })
+        return deleteClass
     }
 
     public async getPaging<T>(dto: PagingDto) {
-        try {
-            let query: any = { isDeleted: false };
+        let query: any = { isDeleted: false };
 
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
 
-            const $pipline = [$projection];
+        const $pipline = [$projection];
 
-            return await this.findPaging(query, dto, $pipline);
-        } catch (e) {
-            return e;
-        }
+        return await this.findPaging(query, dto, $pipline);
     }
 
-    public async getById<T>(id:string) {
-        try {
-            const $match = {
-                $match : {
-                    _id : new Types.ObjectId(id),
-                    isDeleted : false
-                }
+    public async getById<T>(id: string) {
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(id),
+                isDeleted: false
             }
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
-
-            const $pipline = [$match, $projection];
-
-            return await this.aggregate( $pipline);
-        } catch (e) {
-            return e;
         }
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
+
+        const $pipline = [$match, $projection];
+
+        return (await  this.aggregate($pipline)).shift();
     }
 
 

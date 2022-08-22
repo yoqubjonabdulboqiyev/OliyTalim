@@ -18,16 +18,16 @@ export async function StartTestHandler(req, res, next) {
         }
         const dto = await validateIt(result, ResultDto, DtoGroups.CREATE);
         const findNotFinished = await resultService.findNotFinished(result);
-        if (findNotFinished[0]) {
+        if (findNotFinished) {
             throw ResultError.NotFinished()
         }
         const findStart = await resultService.findStart(userId);
-        if (findStart[0]) {
+        if (findStart) {
             throw ResultError.NotPermission()
         }
 
         const finish = await resultService.findFinish(result)
-        if (finish[0]) {
+        if (finish) {
             const results = {
                 userId: new Types.ObjectId(result.userId),
                 testId: new Types.ObjectId(result.testId),
@@ -67,27 +67,27 @@ export async function createYechishHandler(req, res, next) {
         }
         const dto = await validateIt(solveTest, SolveTestDto, DtoGroups.CREATE);
         const startResult = await resultService.findNotFinished(solveTest)
-        if (!startResult[0]) {
+        if (!startResult) {
             throw ResultError.NotStart()
         }
         else {
-            const finishDate = await resultService.Time(startResult[0])
+            const finishDate = await resultService.Time(startResult)
             if (finishDate <= new Date()) {
-                startResult[0].finished = finishDate;
-                const ball = await solveTestService.getAnswer(startResult[0]);
+                startResult.finished = finishDate;
+                const ball = await solveTestService.getAnswer(startResult);
                 const finish = {
-                    userId: startResult[0].userId,
-                    tetsId: startResult[0].tetsId,
+                    userId: startResult.userId,
+                    tetsId: startResult.tetsId,
                     status: 'finish',
                     finished: finishDate,
                     ball: ball
                 }
-                const resultUpdate = await resultService.updateResult(startResult[0]._id, finish)
+                const resultUpdate = await resultService.updateResult(startResult._id, finish)
                 throw ResultError.finish(resultUpdate)
             }
 
-            const question = await solveTestService.findAnswer(startResult[0].createdAt, solveTest)
-            if (question[0]) {
+            const question = await solveTestService.findAnswer(startResult.createdAt, solveTest)
+            if (question) {
                 const answer = {
                     userId: new Types.ObjectId(solveTest.userId),
                     testId: new Types.ObjectId(solveTest.testId),
@@ -95,7 +95,7 @@ export async function createYechishHandler(req, res, next) {
                     questionId: new Types.ObjectId(solveTest.questionId),
                 }
 
-                const update = await solveTestService.updateSolveTest(question[0]._id, answer)
+                const update = await solveTestService.updateSolveTest(question._id, answer)
                 return res.send(SolveTestError.Success(update))
             }
             else {
@@ -126,17 +126,17 @@ export async function FinishTestHandler(req, res, next) {
         }
         const dto = await validateIt(result, ResultDto, DtoGroups.UPDATE);
         const startResult = await resultService.findNotFinished(result)
-        if (startResult[0]) {
-            startResult[0].finished = new Date();
-            const ball = await solveTestService.getAnswer(startResult[0]);
+        if (startResult) {
+            startResult.finished = new Date();
+            const ball = await solveTestService.getAnswer(startResult);
             const finish = {
-                userId: startResult[0].userId,
-                tetsId: startResult[0].tetsId,
+                userId: startResult.userId,
+                tetsId: startResult.tetsId,
                 status: 'finish',
                 finished: new Date(),
                 ball: ball
             }
-            const resultUpdate = await resultService.updateResult(startResult[0]._id, finish)
+            const resultUpdate = await resultService.updateResult(startResult._id, finish)
             return res.send(ResultError.Success(resultUpdate))
         }
         else {

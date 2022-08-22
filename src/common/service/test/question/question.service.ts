@@ -12,88 +12,63 @@ export class QuestionServise extends BaseServise<Question>{
     }
 
     public async QuestionFindById(id) {
-        try {
-            const question = await this.findById(id);
-            if (!question) throw QuestionError.NotFound(id);
-            return question;
-        }
-        catch (e) {
-            return e;
-        }
+        const question = await this.findById(id);
+        if (!question) throw QuestionError.NotFound(id);
+        return question;
     }
 
     public async createQuestion(data) {
-        try {
-            const question = await super.create(data);
-            return question;
-        } catch (e) {
-            return e;
-        }
+        const question = await super.create(data);
+        return question;
     }
     public async updateQuestion(id, data: QuestionDto, options?: QueryOptions) {
-        try {
-            await this.QuestionFindById(id)
-            const updateQuestion = await this.updateOne(id, data, options);
-            return updateQuestion
-        } catch (e) {
-            return e;
-        }
+        await this.QuestionFindById(id)
+        const updateQuestion = await this.updateOne(id, data, options);
+        return updateQuestion
     }
 
     public async deleteQuestion(id) {
-        try {
-            await this.QuestionFindById(id)
-            const deleteQuestion = await this.deleteOne(id)
-            return deleteQuestion
-        } catch (e) {
-            return e;
-        }
+        await this.QuestionFindById(id)
+        const deleteQuestion = await this.deleteOne(id)
+        return deleteQuestion
     }
 
     public async getPaging<T>(dto: PagingDto) {
-        try {
-            let query: any = { isDeleted: false };
+        let query: any = { isDeleted: false };
 
-            const $projection = {
-                $project: {
-                    title: 1,
-                    answer: {
-                        title: 1
-                    }
-                },
-            };
+        const $projection = {
+            $project: {
+                title: 1,
+                answer: {
+                    title: 1
+                }
+            },
+        };
 
-            const $pipline = [$projection];
+        const $pipline = [$projection];
 
-            return await this.findPaging(query, dto, $pipline);
-        } catch (e) {
-            return e;
-        }
+        return await this.findPaging(query, dto, $pipline);
     }
 
     public async getById<T>(id: string) {
-        try {
-            const $match = {
-                $match: {
-                    _id: new Types.ObjectId(id),
-                    isDeleted: false
-                }
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(id),
+                isDeleted: false
             }
-            const $projection = {
-                $project: {
-                    title: 1,
-                    answer: {
-                        title: 1
-                    }
-                },
-            };
-
-            const $pipline = [$match, $projection];
-
-            return await this.aggregate($pipline);
-        } catch (e) {
-            return e;
         }
+        const $projection = {
+            $project: {
+                title: 1,
+                answer: {
+                    title: 1
+                }
+            },
+        };
+
+        const $pipline = [$match, $projection];
+
+        return await this.aggregate($pipline);
     }
 
 

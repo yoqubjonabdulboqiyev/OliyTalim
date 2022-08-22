@@ -13,38 +13,24 @@ export class UserServise extends BaseServise<User>{
     }
 
     public async UserFindById(id) {
-        try {
-            const user = await this.findById(id);
-            if (!user) throw userError.NotFound(id);
-            return user;
-        }
-        catch (e) {
-            throw e;
-        }
+        const user = await this.findById(id);
+        if (!user) throw userError.NotFound(id);
+        return user;
     }
 
     public async findPhoneNumber(phoneNumber) {
-        try {
-            const user = await this.model.findOne({ phoneNumber: phoneNumber });
-            if (!user) throw userError.NotFound(phoneNumber);
-            return user;
-        }
-        catch (e) {
-            return e;
-        }
+        const user = await this.model.findOne({ phoneNumber: phoneNumber });
+        if (!user) throw userError.NotFound(phoneNumber);
+        return user;
     }
 
     public async createUser(data) {
-        try {
-            const users = await this.model.findOne({ phoneNumber: data.phoneNumber });
-            if (users) { throw userError.AlreadyExsist(data) }
-            const password = Number(Math.random().toString().substring(2, 6));
-            data.password = password;
-            const user = await super.create(data);
-            return user;
-        } catch (e) {
-            return e;
-        }
+        const users = await this.model.findOne({ phoneNumber: data.phoneNumber });
+        if (users) { throw userError.AlreadyExsist(data) }
+        const password = Number(Math.random().toString().substring(2, 6));
+        data.password = password;
+        const user = await super.create(data);
+        return user;
     }
     public async updateUser(id, data: UserDto, options?: QueryOptions) {
         try {
@@ -52,42 +38,34 @@ export class UserServise extends BaseServise<User>{
             const updateUser = await this.updateOne(id, data, options);
             return updateUser
         } catch (e) {
-            if(e.code==11000) throw userError.AlreadyExsist(Object.keys(e.keyPattern))
+            if (e.code == 11000) throw userError.AlreadyExsist(Object.keys(e.keyPattern))
             return e;
         }
     }
 
     public async deleteUser(id) {
-        try {
-            await this.UserFindById(id)
-            const deleteUser = await this.deleteOne(id)
-            return deleteUser
-        } catch (e) {
-            return e;
-        }
+        await this.UserFindById(id)
+        const deleteUser = await this.deleteOne(id)
+        return deleteUser
     }
 
 
     public async getById<T>(id: string) {
-        try {
-            const $match = {
-                $match: {
-                    _id: new Types.ObjectId(id),
-                    isDeleted: false
-                }
+        const $match = {
+            $match: {
+                _id: new Types.ObjectId(id),
+                isDeleted: false
             }
-            const $projection = {
-                $project: {
-                    name: 1,
-                },
-            };
-
-            const $pipline = [$match, $projection];
-
-            return await this.aggregate($pipline);
-        } catch (error) {
-            throw (error);
         }
+        const $projection = {
+            $project: {
+                name: 1,
+            },
+        };
+
+        const $pipline = [$match, $projection];
+
+        return  (await this.aggregate($pipline)).shift();
     }
 
 
