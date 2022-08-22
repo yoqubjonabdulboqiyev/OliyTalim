@@ -65,42 +65,6 @@ export class ResultServise extends BaseServise<Result>{
         }
     }
 
-
-    public async testFinish(data) {
-        try {
-            const $match = {
-                $match: {
-                    userId: new Types.ObjectId(data.userId),
-                    testId: new Types.ObjectId(data.testId),
-                    createdAt: { $gte: new Date(data.createdAt) }
-                }
-            }
-            let ball = 0;
-            const $pipeline = [$match];
-            const results = await solveTestService.aggregate($pipeline);
-            if (!results[0]) return ball;
-            for (let item of results) {
-                const $matchQuestion = {
-                    $match: {
-                        _id: item.questionId
-                    }
-                }
-                const $pipelineQuestion = [$matchQuestion]
-                const question = await questionService.aggregate($pipelineQuestion);
-                if (!question[0]) return ball
-                question[0].answer.forEach((items) => {
-                    if ((items._id).toString() == (item.answerId).toString() && items.isCorrect == true) {
-                        ball += 1;
-                    }
-                })
-            }
-            return ball;
-        }
-        catch (e) {
-            return e;
-        }
-    }
-
     public async findFinish(data) {
         try {
             const $match = {
