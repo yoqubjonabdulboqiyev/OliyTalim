@@ -13,7 +13,6 @@ export async function getPagingEmployeeHandler(req, res, next) {
     try {
         await roleService.hasAccess(req.roleId, Role.EMPLOYEE);
         const data = await validateIt(req.query, PagingDto, DtoGroups.PAGENATION)
-        console.log(data)
         const employees = await employeeService.getPaging(data);
         const count = await employeeService.getCount();
 
@@ -82,7 +81,6 @@ export async function deleteEmployeeHandler(req, res, next) {
         const data = await validateIt(req.params, EmployeeDto, DtoGroups.DELETE);
 
         const employee = await employeeService.getEmployeeById(data._id);
-        console.log(employee)
         const deleteEmployee = await employeeService.deleteOne(employee._id)
 
         return res.send(EmployeeError.Success(deleteEmployee))

@@ -43,7 +43,7 @@ export class ResultServise extends BaseServise<Result>{
         }
        
         const Test = (await testService.aggregate([$match])).shift();
-        const finishDate = new Date((Test.duration) * 60 * 1000 + (data.createdAt).getTime())
+        const finishDate = new Date((Test.duration)* 60 * 1000 + (data.createdAt).getTime())
         return finishDate
 
     }
@@ -57,7 +57,7 @@ export class ResultServise extends BaseServise<Result>{
             }
         }
         
-        const finish =( await this.aggregate([$match])).shift()
+        const finish =  await this.aggregate([$match])
         return finish
     }
     public async createResult(data) {

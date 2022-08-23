@@ -8,7 +8,6 @@ export async function resultsHandler(req, res, next) {
 
     try {
         const data = await validateIt(req.params, BaseDto, DtoGroups.GET_BY_ID)
-        console.log(data)
         const results = await resultService.results(data._id)
         return res.send(ResultError.Success(results))
     } catch (e) {

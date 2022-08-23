@@ -1,5 +1,7 @@
 import { Types } from "mongoose";
+import cron from "node-cron"
 import { ResultError } from "../../../../common/db/model/test/result/result.error";
+import { STATUS } from "../../../../common/db/model/test/result/result.model";
 import { SolveTestError } from "../../../../common/db/model/test/solveTest/solveTest.error";
 import { resultService } from "../../../../common/service/test/result/result.service";
 import { solveTestService } from "../../../../common/service/test/solveTest/solveTest.service";
@@ -10,6 +12,7 @@ import { validateIt } from "../../../../common/validation/validate";
 
 export async function StartTestHandler(req, res, next) {
     try {
+
         const data = req.body;
         const userId: string = (req._id).toString()
         const result = {
@@ -27,13 +30,13 @@ export async function StartTestHandler(req, res, next) {
         }
 
         const finish = await resultService.findFinish(result)
-        if (finish) {
+        if (finish[0]) {
             const results = {
                 userId: new Types.ObjectId(result.userId),
                 testId: new Types.ObjectId(result.testId),
                 started: new Date(),
                 count: finish[finish.length - 1].count + 1,
-                status: 'start'
+                status: STATUS.START
             }
 
             const testStarted = await resultService.createResult(results)
@@ -44,7 +47,7 @@ export async function StartTestHandler(req, res, next) {
                 userId: new Types.ObjectId(result.userId),
                 testId: new Types.ObjectId(result.testId),
                 started: new Date(),
-                status: 'start',
+                status: STATUS.START,
                 count: 1
             }
             const testStarted = await resultService.createResult(results)
@@ -72,19 +75,22 @@ export async function createYechishHandler(req, res, next) {
         }
         else {
             const finishDate = await resultService.Time(startResult)
-            if (finishDate <= new Date()) {
-                startResult.finished = finishDate;
-                const ball = await solveTestService.getAnswer(startResult);
-                const finish = {
-                    userId: startResult.userId,
-                    tetsId: startResult.tetsId,
-                    status: 'finish',
-                    finished: finishDate,
-                    ball: ball
+            let task = cron.schedule('* * * * *', async () => {
+                if (finishDate <= new Date()) {
+                    startResult.finished = finishDate;
+                    const ball = await solveTestService.getAnswer(startResult);
+                    const finish = {
+                        userId: startResult.userId,
+                        tetsId: startResult.tetsId,
+                        status: STATUS.FINISH,
+                        finished: finishDate,
+                        ball: ball
+                    }
+                    const resultUpdate = await resultService.updateResult(startResult._id, finish)
+                    task.stop();
+                    return res.send(ResultError.finish(resultUpdate))
                 }
-                const resultUpdate = await resultService.updateResult(startResult._id, finish)
-                throw ResultError.finish(resultUpdate)
-            }
+            });
 
             const question = await solveTestService.findAnswer(startResult.createdAt, solveTest)
             if (question) {
@@ -132,7 +138,7 @@ export async function FinishTestHandler(req, res, next) {
             const finish = {
                 userId: startResult.userId,
                 tetsId: startResult.tetsId,
-                status: 'finish',
+                status: STATUS.FINISH,
                 finished: new Date(),
                 ball: ball
             }

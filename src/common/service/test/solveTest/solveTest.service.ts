@@ -115,8 +115,13 @@ export class SolveTestServise extends BaseServise<SolveTest>{
             $projectAnswer
         ]
 
-        const answer =  (await this.aggregate($pipeline)).shift()
-        return answer.count
+        const answer =  await this.aggregate($pipeline)
+        if(answer[0]){
+            return answer[0].count
+        }
+        else{
+            return 0
+        }
     }
 
 }
